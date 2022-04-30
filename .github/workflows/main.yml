@@ -26,7 +26,7 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.1.0
       with:
-        server: ${{ secrets.FTP_HOSTNAME }}
-        username: ${{ secrets.FTP_USERNAME}}
+        server: ftp.jamesfm.co.uk
+        username: u671797761.jamesfm
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ${{ secrets.FTP_PATH }}
+        local-dir: wrodle/
