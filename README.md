@@ -1,2 +1,3 @@
-# MTB app
+# Wrodle
 
+Wordle clone
