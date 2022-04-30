@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Oleo+Script&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,700&display=swap');
+
+
+:root{
+  --app-max-width: 500px;
+  --header-height: 50px; 
+}
+
+html{
+  height:100%;
+}
+
+body {
+  background-color: black;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* Prevent scrollbar appearing on page transition */
+  overflow-y: hidden;
+}
+
+#root {
+  height:100%;
+}
+.app{
+  display: inline;
+  height:100%;
+}
+
+.wordle-game{
+  display:flex;
+  flex-direction:column;
+
+  width: 100%;
+  height: calc(100% - var(--header-height));
+
+  margin: 0 auto;
+  max-width: var(--app-max-width);
+}
+
+button {
+
+  color: white;
+  background-color: black;
+  border: 1px solid white;
+  padding: 1em 1em;
+  font-size: 12px;
+}
+
+button:hover{
+  color: black;
+  background-color: white;
+}
+
+.app-header {
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  height: var(--header-height);
+  background-color: black;
+  border-bottom: 1px solid white;
+  justify-content:space-between;
+  align-items: center;
+  text-align: center;
+  font-family: 'Oleo Script', cursive;
+  font-size: 20px;
+}
+
+.app-header .app-title {
+  position: absolute;
+  left: 50%;
+  color: white;
+  
+  transform: translate(-50%, 0);
+}
+
+
+.grid-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  overflow: hidden;
+  
+}
+
+
+.end-overlay {
+  z-index: 100;
+position:absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: dimgray;  
+border: 1px solid white;
+font-size: 50px;
+padding: 10px;
+text-align: center;
+}
+
+.wordle-grid {
+
+  display: grid;
+  text-align: center;
+  justify-content: space-evenly;
+  grid-gap: 6px;
+  font-size: 18px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.wordle-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 6px;
+}
+
+.wordle-item {
+  display: flex;
+  border: 2px solid #555555;
+  height: 1em;
+  width: 1em;
+  padding: 0.5em 0.5em;
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+
+}
+
+.wordle-item-green{
+  background-color: green;
+}
+.wordle-item-yellow{
+  background-color: darkgoldenrod;
+}
+.wordle-item-grey{
+  background-color: #333333;
+}
+
+.keyboard {
+  display: flex;
+  min-width: 50%;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  padding: 20px;
+}
+
+.keyboard .keyboard-row{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto 8px;
+  flex-flow: row;
+  align-items: center;
+  touch-action: manipulation;
+}
+
+.keyboard .keyboard-item {
+  display: flex;
+  flex: 1;
+  background-color: #333333;
+  border-radius: 4px;
+  height: 58px;
+  margin: 0 6px 0 0;
+  padding: 0 5px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  user-select: none;
+  -webkit-tap-highlight-color: darkgrey;
+}
+
+
+.keyboard .keyboard-row:--noword {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 0)  }
+  25% { transform: translate(-1px, -0)  }
+  50% { transform: translate(1px, -0)  }
+  75% { transform: translate(-1px, -0)  }
+  100% { transform: translate(1px, 0)  }
+}
