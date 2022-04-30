@@ -29,4 +29,5 @@ jobs:
         server: ftp.jamesfm.co.uk
         username: u671797761.jamesfm
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: wrodle/
+        local-dir: build/
+        server-dir: wrodle/
