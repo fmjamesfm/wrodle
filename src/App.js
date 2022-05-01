@@ -323,6 +323,7 @@ const handleKeyDown = useCallback( e => inputCallback(e.key), [curCol, curRow]);
   function restartGame(){
     setGrid(initGrid(grid_rows, grid_cols));
     setStatus(initGrid(grid_rows, grid_cols));
+    setLetterStatus({});
     setCurCol(0);
     setCurRow(0);
     setVictory(false);
@@ -332,6 +333,7 @@ const handleKeyDown = useCallback( e => inputCallback(e.key), [curCol, curRow]);
 
   function restartRandom(){
       restartGame();
+      
       setTarget(pickRandomWord());
   }
 
