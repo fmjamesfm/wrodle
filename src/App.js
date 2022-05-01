@@ -21,7 +21,7 @@ function checkWord(word){
 
 function WordleGrid(props){
 
-  const rows = props.grid.map((item, idx) => <WordleRow key={idx} cols={item} status={props.status[idx]}/>);
+  const rows = props.grid.map((item, idx) => <WordleRow shake={props.shake==idx} key={idx} cols={item} status={props.status[idx]}/>);
   
   return (
       <div className='grid-container'>
@@ -47,7 +47,7 @@ function WordleRow(props){
 
     return (
 
-      <div className='wordle-row'>
+      <div className={'wordle-row ' + (props.shake ? 'shake-row' : '' )}>
 
             {items}
 
@@ -189,7 +189,8 @@ function App() {
   const [endGame, setEndgame] = useState(false);
   const [victory, setVictory] = useState(false);
   const location = useLocation();
-  
+  const [shake, setShake] = useState(-1);
+
   const [urlGeneratorOpen, setUrlGeneratorOpen] = useState(false);
     
  
@@ -265,7 +266,7 @@ function App() {
     handleSetStatus(curRow-1, final);
 
     }, [curRow]) 
-  
+    
   
    
   const inputCallback = useCallback( e => {
@@ -302,12 +303,20 @@ function App() {
             setCurCol(0);
             
           }
+          else{
+            setShake(curRow);
+            const timeout = setTimeout(()=> {setShake(-1)}, 500);
+            console.log("should shake");
+            return () => clearTimeout(timeout);
+
+          }
         }
         if (e.toLowerCase()=='backspace' && curCol > 0){
           setValue(curRow, curCol-1, null);
           setCurCol(curCol-1);
         }
 
+        
     }, [curCol, curRow]);
   
 const handleKeyDown = useCallback( e => inputCallback(e.key), [curCol, curRow]);
@@ -356,7 +365,7 @@ const handleKeyDown = useCallback( e => inputCallback(e.key), [curCol, curRow]);
           </div>
 
         <div className='wordle-game'>
-          <WordleGrid grid={grid} status={status}/>
+          <WordleGrid grid={grid} status={status} shake={shake}/>
 
           <Keyboard callback={inputCallback} status={letterStatus}/>
           </div>

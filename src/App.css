@@ -215,15 +215,15 @@ gap:10px;
 }
 
 
-.wordle-row:--noword {
+.shake-row{
   animation: shake 0.4s;
 }
 
 @keyframes shake {
-  0% { transform: translate(1px, 0)  }
-  25% { transform: translate(-1px, -0)  }
-  50% { transform: translate(1px, -0)  }
-  75% { transform: translate(-1px, -0)  }
+  0% { transform: translate(10px, 0)  }
+  25% { transform: translate(-10px, -0)  }
+  50% { transform: translate(5px, -0)  }
+  75% { transform: translate(-2px, -0)  }
   100% { transform: translate(1px, 0)  }
 }
 
