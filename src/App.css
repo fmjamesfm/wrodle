@@ -175,16 +175,6 @@ gap:10px;
 
 }
 
-.wordle-item-green{
-  background-color: green;
-}
-.wordle-item-yellow{
-  background-color: darkgoldenrod;
-}
-.wordle-item-grey{
-  background-color: #333333;
-}
-
 .keyboard {
   display: flex;
   min-width: 50%;
@@ -206,10 +196,10 @@ gap:10px;
   touch-action: manipulation;
 }
 
-.keyboard .keyboard-item {
+.keyboard-item {
   display: flex;
   flex: 1;
-  background-color: #333333;
+  background-color: #555555;
   border-radius: 4px;
   height: 58px;
   margin: 0 6px 0 0;
@@ -225,7 +215,7 @@ gap:10px;
 }
 
 
-.keyboard .keyboard-row:--noword {
+.wordle-row:--noword {
   animation: shake 0.4s;
 }
 
@@ -235,4 +225,14 @@ gap:10px;
   50% { transform: translate(1px, -0)  }
   75% { transform: translate(-1px, -0)  }
   100% { transform: translate(1px, 0)  }
+}
+
+.wordle-item-green{
+  background-color: green;
+}
+.wordle-item-yellow{
+  background-color: darkgoldenrod;
+}
+.wordle-item-grey{
+  background-color: #333333;
 }

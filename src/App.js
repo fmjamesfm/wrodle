@@ -125,30 +125,30 @@ function initGrid(r,c){
     return grid;
 }
 
-function KeyboardItem({string, onClick}){
+function KeyboardItem({string, onClick, status}){
   if (string.toLowerCase()=='backspace')
 
   {return (<div className='keyboard-item' onClick={()=>onClick(string)}><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
   <path fill="white" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"></path>
 </svg></div>)}
 
-  return (<div className='keyboard-item' onClick={()=>onClick(string)}>{string}</div>)
+  return (<div className={'keyboard-item ' + status} onClick={()=>onClick(string)}>{string}</div>)
 }
 
-function Keyboard({callback}){
+function Keyboard({callback, status}){
 
   return (<div className="keyboard">
 
 <div className='keyboard-row'>
-        {letters1.map((letter) => <KeyboardItem string={letter} key={letter} onClick={callback}/> )}
+        {letters1.map((letter) => <KeyboardItem string={letter} key={letter} onClick={callback} status={status[letter]}/> )}
         </div>
         
 <div className='keyboard-row'>
-        {letters2.map((letter) => <KeyboardItem string={letter} key={letter} onClick={callback}/>)}
+        {letters2.map((letter) => <KeyboardItem string={letter} key={letter} onClick={callback} status={status[letter]}/>)}
         </div>
         
 <div className='keyboard-row'>
-        {letters3.map((letter) => <KeyboardItem string={letter} key={letter} onClick={callback}/>)}
+        {letters3.map((letter) => <KeyboardItem string={letter} key={letter} onClick={callback} status={status[letter]}/>)}
         </div>
         
   </div>)
@@ -181,11 +181,14 @@ function App() {
   const [curCol, setCurCol] = useState(0);
   const [target, setTarget] = useState(pickRandomWord());
   const [status, setStatus] = useState(initGrid(grid_rows, grid_cols))
+  const [letterStatus, setLetterStatus] = useState({});
   const [endGame, setEndgame] = useState(false);
   const [victory, setVictory] = useState(false);
   const location = useLocation();
+  
   const [urlGeneratorOpen, setUrlGeneratorOpen] = useState(false);
-
+    
+ 
     useEffect(() => {
       console.log(location);
       if (!(location.search)==''){
@@ -215,6 +218,8 @@ function App() {
 
     }, [location.search]);
 
+
+
   function setValue(row, col, val){
     let newgrid = grid.map((arr) => arr.slice());
     newgrid[row][col] = val;
@@ -224,6 +229,11 @@ function App() {
   function handleSetStatus(row, vals){
     let newstatus = status.map((arr) => arr.slice());
     newstatus[row] = vals;
+
+    let flatgrid = grid.flat();
+    let flatstatus = newstatus.flat();
+    setLetterStatus(Object.assign({}, ...flatgrid.map((letter, idx) => ({[letter]: flatstatus[idx]}))));
+
     setStatus(newstatus);
   }
 
@@ -235,13 +245,18 @@ function App() {
 
     const yellow = grid[curRow-1].map((item) => target.indexOf(item) > -1);
     const green = grid[curRow - 1].map((item, idx) => item==target[idx]);
-    
+
+
     const final = green.map((isGreen, idx)=> {
       if (isGreen) {return 'wordle-item-green'}
       if (yellow[idx]) {return 'wordle-item-yellow'}
       return 'wordle-item-grey';
     })
     
+    // update letter status
+
+
+
 
     handleSetStatus(curRow-1, final);
 
@@ -337,7 +352,7 @@ const handleKeyDown = useCallback( e => inputCallback(e.key), [curCol, curRow]);
         <div className='wordle-game'>
           <WordleGrid grid={grid} status={status}/>
 
-          <Keyboard callback={inputCallback} />
+          <Keyboard callback={inputCallback} status={letterStatus}/>
           </div>
         
       </div>
