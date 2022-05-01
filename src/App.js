@@ -208,7 +208,6 @@ function getStatusCompare(tgt, word) {
       let n = idxInTarget.length - perfectMatchIdx.length;
       if (yellowIdxs.length == 0) {return;}
       for (let i=0; i<(n); i++) {
-        console.log(yellowIdxs[i]);
           status[yellowIdxs[i]] = 'wordle-item-yellow';
       };
       
@@ -238,7 +237,6 @@ function App() {
     
  
     useEffect(() => {
-      console.log(location);
       if (!(location.search)==''){
       const params = new URLSearchParams(location.search);
       const value = params.get('word');
@@ -252,7 +250,7 @@ function App() {
 
       catch (error) {
         alert("URL not valid! Generating random word");
-        console.log(error);
+
         restartRandom(); 
         return;
       }
@@ -285,8 +283,6 @@ function App() {
 
     } 
         ));
-        
-    console.log(newLetterStatus);
         
     setLetterStatus(newLetterStatus);
 
@@ -342,7 +338,7 @@ function App() {
           else{
             setShake(curRow);
             const timeout = setTimeout(()=> {setShake(-1)}, 500);
-            console.log("should shake");
+
             return () => clearTimeout(timeout);
 
           }
