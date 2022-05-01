@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {useLocation} from 'react-router-dom';
 import ShortCrypt from 'short-crypt';
 import db from './dict.json';
+import { findRenderedComponentWithType } from 'react-dom/test-utils';
 
 const grid_cols = 5;
 const grid_rows = 6;
@@ -177,6 +178,48 @@ function encryptWord(word){
   return url_code;
 }
 
+function finder(array, item) {
+  
+  let index = -1;
+  let indices = new Array();
+
+  while ((index = array.indexOf(item, index + 1)) > -1) {
+    indices.push(index)
+  }
+    return indices;
+}
+
+
+function getStatusCompare(tgt, word) {
+  let row = word.split('');
+  let target = tgt.split('');
+  let status = target.map(()=>'wordle-item-grey');
+  let setOfLettersInTarget = [...new Set(target)];
+
+  setOfLettersInTarget.map((letter) =>
+  {
+    
+      let idxInTarget = finder(target, letter);  
+      let idxInRow = finder(row, letter);
+      if (idxInRow.length ==0) {return;}
+      let perfectMatchIdx = idxInRow.filter((item) => idxInTarget.indexOf(item) > -1);
+      perfectMatchIdx.map((idx) => status[idx] = 'wordle-item-green');
+      let yellowIdxs = idxInRow.filter((item) => perfectMatchIdx.indexOf(item) == -1);
+      let n = idxInTarget.length - perfectMatchIdx.length;
+      if (yellowIdxs.length == 0) {return;}
+      for (let i=0; i<(n); i++) {
+        console.log(yellowIdxs[i]);
+          status[yellowIdxs[i]] = 'wordle-item-yellow';
+      };
+      
+  });
+  
+  return status;
+
+} 
+ 
+  
+
 
 function App() {
 
@@ -231,13 +274,21 @@ function App() {
     setGrid(newgrid);
   }
 
-  function handleSetStatus(row, vals){
+  function handleSetStatus(){
     let newstatus = status.map((arr) => arr.slice());
-    newstatus[row] = vals;
+    newstatus[curRow-1] = getStatusCompare(target, grid[curRow-1].join(''));
 
-    let flatgrid = grid.flat();
-    let flatstatus = newstatus.flat();
-    setLetterStatus(Object.assign({}, ...flatgrid.map((letter, idx) => ({[letter]: flatstatus[idx]}))));
+    let newLetterStatus = Object.assign({}, letterStatus, ...grid[curRow-1].map((letter, idx) => 
+      {
+        if (!(letterStatus[letter] == 'wordle-item-green')) {
+      return ({[letter]: newstatus[curRow-1][idx]})}
+
+    } 
+        ));
+        
+    console.log(newLetterStatus);
+        
+    setLetterStatus(newLetterStatus);
 
     setStatus(newstatus);
   }
@@ -248,22 +299,7 @@ function App() {
       return;
     }
 
-    const yellow = grid[curRow-1].map((item) => target.indexOf(item) > -1);
-    const green = grid[curRow - 1].map((item, idx) => item==target[idx]);
-
-
-    const final = green.map((isGreen, idx)=> {
-      if (isGreen) {return 'wordle-item-green'}
-      if (yellow[idx]) {return 'wordle-item-yellow'}
-      return 'wordle-item-grey';
-    })
-    
-    // update letter status
-
-
-
-
-    handleSetStatus(curRow-1, final);
+    handleSetStatus();
 
     }, [curRow]) 
     
