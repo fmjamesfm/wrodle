@@ -144,9 +144,13 @@ function Keyboard({callback, status}){
         </div>
         
 <div className='keyboard-row'>
+        <div style={{flex: "0.5"}}></div>
         {letters2.map((letter) => <KeyboardItem string={letter} key={letter} onClick={callback} status={status[letter]}/>)}
+        <div style={{flex: "0.5"}}></div>
+  
         </div>
-        
+
+
 <div className='keyboard-row'>
         {letters3.map((letter) => <KeyboardItem string={letter} key={letter} onClick={callback} status={status[letter]}/>)}
         </div>
