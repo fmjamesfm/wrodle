@@ -1,5 +1,7 @@
 import './App.css';
 import { useState, useEffect, useCallback } from 'react';
+import {useLocation} from 'react-router-dom';
+import ShortCrypt from 'short-crypt';
 import db from './dict.json';
 
 const grid_cols = 5;
@@ -8,6 +10,8 @@ const grid_rows = 6;
 const letters1 = 'qwertyuiop'.split('');
 const letters2 = 'asdfghjkl'.split('');
 const letters3 = ['Enter',...('zxcvbnm'.split('')), 'Backspace'];
+
+const sc = new ShortCrypt('potat');
 
 function checkWord(word){
 
@@ -51,14 +55,53 @@ function WordleRow(props){
     )
 }
 
-function EndOverlay({victory, numGuess}){
+
+function URLGenerator(){
+
+  const [string, setString] = useState("");
+  const [disState, setDisState] = useState(true);
+  const [result, setResult] = useState("");
+
+  const onClick = () =>{
+      
+      let search_tag = encryptWord(string.toLowerCase());
+      setResult(window.location.host + "?word=" + search_tag);    
+
+  };
+
+  useEffect(()=>{
+    setDisState(!(string.length==grid_cols && string.match(/[a-z]/i)) );
+
+  }, [string]);
+
+  const copyToClipboard = ()=> {
+    navigator.clipboard.writeText(result).then().catch(() => {
+      alert("something went wrong");
+    });
+  };
+
+  return (<div className='url-generator'>
+    <div className='url-generate-input'>
+        
+        <input autoFocus style={{textTransform: "uppercase"}} type='text' value={string} onChange={(e)=>setString(e.target.value)}></input>
+        <button disabled={disState} onClick={onClick} >Generate</button>
+        
+        </div>
+
+        <div style={{fontSize: "24px"}}>{result}{!(result=="") ? <button onClick={copyToClipboard} >Copy</button> : null}
+</div>
+  </div>)
+}
+
+
+function EndOverlay({victory, numGuess, word}){
 
   
-const message =  victory ? `You won! And it only took ${numGuess} guesses!` : "You lost! :(";
+const message =  victory ? <div>{`You won! Guesses: ${numGuess}`}</div> : <div>{`You lost! :( The word was: ${word}`}</div>;
 
 return(<div className='end-overlay'>
       
-      <div>{message}</div>
+      {message}
 
   </div>)
 
@@ -119,15 +162,58 @@ function pickRandomWord(){
 
 }
 
+
+function decryptWord(word){
+  const url_code = sc.decryptURLComponent(word);
+  return String.fromCharCode(...url_code);
+}
+
+function encryptWord(word){
+  const url_code = sc.encryptToURLComponent(word);
+  return url_code;
+}
+
+
 function App() {
 
   const [grid, setGrid] = useState(initGrid(grid_rows, grid_cols));
   const [curRow, setCurRow] = useState(0);
   const [curCol, setCurCol] = useState(0);
-  const [target, setTarget] = useState('potat');
+  const [target, setTarget] = useState(pickRandomWord());
   const [status, setStatus] = useState(initGrid(grid_rows, grid_cols))
   const [endGame, setEndgame] = useState(false);
   const [victory, setVictory] = useState(false);
+  const location = useLocation();
+  const [urlGeneratorOpen, setUrlGeneratorOpen] = useState(false);
+
+    useEffect(() => {
+      console.log(location);
+      if (!(location.search)==''){
+      const params = new URLSearchParams(location.search);
+      const value = params.get('word');
+
+      if (!(value==null)){
+        let word = '';
+
+        try{  
+        word = decryptWord(value)
+      }
+
+      catch (error) {
+        alert("URL not valid! Generating random word");
+        console.log(error);
+        restartRandom(); 
+        return;
+      }
+
+          
+          setTarget(word);
+        }
+
+          restartGame();    
+        }
+
+    }, [location.search]);
 
   function setValue(row, col, val){
     let newgrid = grid.map((arr) => arr.slice());
@@ -188,7 +274,7 @@ function App() {
 
             else if (checkWord(word)){
 
-            if (curRow == grid_rows) {
+            if (curRow == grid_rows-1) {
               setEndgame(true);
               setVictory(false);
             }
@@ -224,17 +310,26 @@ const handleKeyDown = useCallback( e => inputCallback(e.key), [curCol, curRow]);
     setStatus(initGrid(grid_rows, grid_cols));
     setCurCol(0);
     setCurRow(0);
-    setTarget(pickRandomWord());
     setVictory(false);
     setEndgame(false);
+    setUrlGeneratorOpen(false);
+  }
+
+  function restartRandom(){
+      restartGame();
+      setTarget(pickRandomWord());
   }
 
   if (grid) {
     return (
       <div className="app" >
-        { endGame ? <EndOverlay victory={victory} numGuess={curRow}/> : null }
+        { endGame ? <EndOverlay victory={victory} numGuess={curRow} word={target}/> : null }
+        { urlGeneratorOpen ? <URLGenerator basepath={location.pathname}/> : null}
+
         <div className="app-header">
-            <button style={{marginLeft: "15px" }} onClick={restartGame} onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}> Play again </button>
+            <button style={{marginLeft: "15px" }} onClick={restartRandom} onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}> Random </button>
+            
+            <button style={{marginRight: "15px" }} onClick={()=> setUrlGeneratorOpen(!(urlGeneratorOpen))} onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}> Gen word </button>
             
             <h1 className='app-title'>Wrodle</h1>
           </div>

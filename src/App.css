@@ -8,17 +8,18 @@
 
 html{
   height:100%;
+  
+  font-family: 'Roboto', sans-serif;
 }
 
 body {
   background-color: black;
   color: white;
-  font-family: 'Roboto', sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
   /* Prevent scrollbar appearing on page transition */
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 #root {
@@ -47,7 +48,21 @@ button {
   border: 1px solid white;
   padding: 1em 1em;
   font-size: 12px;
+  text-transform: uppercase;
+  border-radius: 10px;
+  font-weight: bold;
 }
+
+button:disabled {
+
+background-color: gray;
+}
+
+button:disabled:hover {
+  color: inherit;
+  background-color: gray;
+  }
+
 
 button:hover{
   color: black;
@@ -90,14 +105,41 @@ button:hover{
 .end-overlay {
   z-index: 100;
 position:absolute;
-top: 50%;
+bottom: 0%;
 left: 50%;
+width: 100%;
 transform: translate(-50%, -50%);
-background-color: dimgray;  
+background-color: #553333aa;  
 border: 1px solid white;
 font-size: 50px;
 padding: 10px;
 text-align: center;
+text-transform: uppercase;
+}
+
+.url-generator {
+  z-index: 100;
+  align-items: center;
+justify-content: space-evenly;
+display: flex;
+flex-direction: column;
+position:absolute;
+top: 50%;
+left: 50%;
+padding: 25px;
+transform: translate(-50%, -50%);
+background-color: #444444;
+border-radius: 20px;  
+border: 1px solid white;
+font-size: 50px;
+text-align: center;
+gap:10px;
+}
+
+.url-generate-input {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .wordle-grid {
