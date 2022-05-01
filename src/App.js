@@ -65,7 +65,7 @@ function URLGenerator(){
   const onClick = () =>{
       
       let search_tag = encryptWord(string.toLowerCase());
-      setResult(window.location.host + "?word=" + search_tag);    
+      setResult(window.location.host + window.location.pathname + "?word=" + search_tag);    
 
   };
 
