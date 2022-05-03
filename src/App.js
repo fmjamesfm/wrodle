@@ -2,7 +2,8 @@ import './App.css';
 import { useState, useEffect, useCallback } from 'react';
 import {useLocation} from 'react-router-dom';
 import ShortCrypt from 'short-crypt';
-import db from './dict.json';
+import dbjson from './5words.json';
+
 import { findRenderedComponentWithType } from 'react-dom/test-utils';
 
 const grid_cols = 5;
@@ -13,6 +14,7 @@ const letters2 = 'asdfghjkl'.split('');
 const letters3 = ['Enter',...('zxcvbnm'.split('')), 'Backspace'];
 
 const sc = new ShortCrypt('potat');
+const db = dbjson.map((item)=>item.word);
 
 function checkWord(word){
 
